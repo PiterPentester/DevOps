@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS gogs CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-CREATE USER 'git'@'%' IDENTIFIED BY 'only4gogs';
+CREATE USER 'git'@'%' IDENTIFIED BY 'youpass';
 GRANT ALL PRIVILEGES ON gogs.* TO 'git'@'%' WITH GRANT OPTION;
 SET default_storage_engine=INNODB;
 FLUSH PRIVILEGES;
