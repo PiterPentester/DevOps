@@ -1,0 +1,8 @@
+[nexusrepo]
+name=Nexus Repository
+baseurl=
+username=
+password=
+enabled=1
+gpgcheck=1
+priority=1

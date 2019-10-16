@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Copy nexus.repo to servers
+      copy:
+        src: ../configs/nexus.repo
+        dest: /etc/yum.repos.d/nexus.repo
+
+    - name: Test yum (remove git)
+      yum: pkg=git state=absent
+    
+    - name: Test yum (re-install git)
+      yum: pkg=git state=present
