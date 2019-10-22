@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nexus3-test
+spec:
+  containers:
+  - name: nexus3
+    image: piterpentester/nexus3my:latest
+    ports:
+      - containerPort: 8081
+      - containerPort: 8123
+    volumeMounts:
+    - name: sonatype-work
+      mountPath: /sonatype-work
+ 
+  nodeSelector:
+    minion: nexus3
+
+  volumes:
+  - name: sonatype-work
+    hostPath:
+      path: /sonatype-work-volume
+      type: Directory
+
+  hostNetwork: true
+  dnsPolicy: Default
