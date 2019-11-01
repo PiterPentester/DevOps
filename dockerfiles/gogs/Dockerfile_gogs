@@ -5,7 +5,7 @@ FROM centos:centos7
 ARG BUILD_VERSION=build56
 
 COPY ${BUILD_VERSION}.tar.gz /root/${BUILD_VERSION}.tar.gz
-#COPY app.ini /opt/gogs/custom/conf/app.ini
+COPY app.ini /opt/gogs/custom/conf/app.ini
 
 RUN yum install -y epel-release git \
     && useradd -mr git \
@@ -14,15 +14,17 @@ RUN yum install -y epel-release git \
     && chown -R git:git /opt/${BUILD_VERSION}/data /opt/${BUILD_VERSION}/custom/conf/ /opt/${BUILD_VERSION}/log \
     && chown -R git:git /opt/${BUILD_VERSION} \
     && chmod +x /opt/${BUILD_VERSION}/gogs \
-    && touch /root/start.sh \ 
+    && touch /root/start.sh \
     && echo "#!/bin/sh" >> /root/start.sh \
     && echo "runuser -l git -c '/opt/${BUILD_VERSION}/gogs web'" >> /root/start.sh \
     && chmod ugo+x /root/start.sh \
-    && mkdir /gogs-repositories \
-    && chmod 775 /gogs-repositories \
-    && chown -R git /gogs-repositories 
+    && mkdir -p /home/git/gogs-repositories \
+    && chown -R git:git /home/git/gogs-repositories \
+    && chmod 775 /home/git/gogs-repositories
 
 EXPOSE 3000
 EXPOSE 22
+
+VOLUME ["/home/git/gogs-repositories"]
 
 ENTRYPOINT ["/root/start.sh"]
