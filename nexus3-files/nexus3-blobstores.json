@@ -1,0 +1,10 @@
+{
+	"blobstores": {
+		"file": [
+			"storeYum",
+			"storeGo",
+			"storeFiles",
+			"storeDocker"
+		]
+	}
+}

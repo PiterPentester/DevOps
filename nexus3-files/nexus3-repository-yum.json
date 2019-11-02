@@ -1,0 +1,21 @@
+{
+	"repositories": {
+		"yum": {
+			"proxy": {
+				"proxyYum": {
+					"remote": {
+						"url": "http://mirror.centos.org/centos/7/os/x86_64/repodata/"
+					},
+					"blobstore": {
+						"name": "storeYum"
+					}
+				}
+			}
+		}
+	},
+	"blobstores": {
+		"file": [
+			"storeYum"
+		]
+	}
+}
