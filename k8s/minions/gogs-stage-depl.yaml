@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gogs
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    name: web
+  - port: 2222
+    protocol: TCP
+    name: ssh
+
+  selector:
+    minion: gogs
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: gogs
+spec:
+  selector:
+    matchLabels:
+      minion: gogs
+  template:
+    metadata:
+      labels:
+        minion: gogs
+    spec:
+      containers:
+      - image: piterpentester/gogs-with-volume:latest
+        name: gogs-stage
+        ports:
+        - containerPort: 3000
+          name: web
+        - containerPort: 22
+          name: ssh
+        volumeMounts:
+        - name: gogs-persistent-storage
+          mountPath: /home/git/gogs-repositories
+
+      nodeSelector:
+        minion: gogs
+
+      volumes:
+      - name: gogs-persistent-storage
+        persistentVolumeClaim:
+          claimName: gogs-pv-claim
+
+      hostNetwork: true
+      dnsPolicy: Default

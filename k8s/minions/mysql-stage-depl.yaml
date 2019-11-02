@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    name: mysql
+
+  selector:
+    minion: mysql
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      minion: mysql
+  template:
+    metadata:
+      labels:
+        minion: mysql
+    spec:
+      containers:
+      - image: piterpentester/mysql-gogs:latest
+        name: mysql-for-gogs
+        env:
+          # Use secret in real usage ######
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-stage-persistent-storage
+          mountPath: /var/lib/mysql
+
+      nodeSelector:
+        minion: mysql
+
+
+      volumes:
+      - name: mysql-stage-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-stage-pv-claim
+
+      hostNetwork: true
+      dnsPolicy: Default

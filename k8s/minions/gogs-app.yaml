@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gogs-test
+spec:
+  containers:
+  - name: gogs
+    image: piterpentester/gogs-stage:latest
+    ports:
+      - containerPort: 3000
+      - containerPort: 22
+
+  - name: mysql
+    image: piterpentester/mysql-gogs:latest
+    args: ["-e MYSQL_ROOT_PASSWORD=root_pass"]
+    ports:
+      - containerPort: 3306
+ 
+  nodeSelector:
+    minion: stage
+
+  hostNetwork: true
+  dnsPolicy: Default

@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gogs
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    name: web
+  - port: 3306
+    protocol: TCP
+    name: mysql
+  - port: 2222
+    protocol: TCP
+    name: ssh
+
+  selector:
+    minion: stage
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: gogs
+spec:
+  selector:
+    matchLabels:
+      minion: stage
+  template:
+    metadata:
+      labels:
+        minion: stage
+    spec:
+      containers:
+      - image: piterpentester/mysql-gogs:latest
+        name: mysql-for-gogs
+        env:
+          # Use secret in real usage ######
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+
+      - image: piterpentester/gogs-with-volume:latest
+        name: gogs-stage
+        ports:
+        - containerPort: 3000
+          name: web
+        - containerPort: 22
+          name: ssh
+        volumeMounts:
+        - name: gogs-persistent-storage
+          mountPath: /home/git/gogs-repositories
+
+      nodeSelector:
+        minion: stage
+
+
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+      - name: gogs-persistent-storage
+        persistentVolumeClaim:
+          claimName: gogs-pv-claim
+
+      hostNetwork: true
+      dnsPolicy: Default

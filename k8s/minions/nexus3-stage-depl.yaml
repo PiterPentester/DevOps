@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus3-stage
+spec:
+  ports:
+  - port: 8081
+    protocol: TCP
+    name: web
+  - port: 8123
+    protocol: TCP
+    name: docker
+
+  selector:
+    minion: nexus3-stage
+
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: nexus3-stage
+spec:
+  selector:
+    matchLabels:
+      minion: nexus3-stage
+  template:
+    metadata:
+      labels:
+        minion: nexus3-stage
+    spec:
+      containers:
+      - image: 
+        name: nexus3-stage-container
+        ports: piterpentester/nexus3my:latest
+        - containerPort: 8081
+          name: web
+        - containerPort: 8123
+          name: docker
+        volumeMounts:
+        - name: nexus3-stage-persistent-storage
+          mountPath: /sonatype-work
+
+      nodeSelector:
+        minion: nexus3-stage
+
+
+      volumes:
+      - name: nexus3-stage-persistent-storage
+        persistentVolumeClaim:
+          claimName: nexus3-stage-pv-claim
+
+      hostNetwork: true
+      dnsPolicy: Default
