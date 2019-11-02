@@ -1,6 +1,6 @@
 #!/bin/bash
-export NEXUS_USER=admin
-export NEXUS_PASSWORD=g6JZ7AMX
+export NEXUS_USER=
+export NEXUS_PASSWORD=
 
 #git clone https://github.com/PiterPentester/nexus3-config-as-code.git
 
