@@ -4,7 +4,7 @@ export NEXUS_PASSWORD=
 
 #git clone https://github.com/PiterPentester/nexus3-config-as-code.git
 
-cd nexus3-config-as-code/ && ./scripts/upload_function.py -rf ./functions/deleteAllRepositoryConfiguration.groovy -S delete
+cd nexus3-config-as-code/ 
 
 ./scripts/upload_function.py -rf ./functions/repositoryConfiguration.groovy -d ./examples/nexus3-repository-docker.json
 
