@@ -1,0 +1,20 @@
+{
+	"repositories": {
+		"raw": {
+			"hosted": {
+				"repoFiles": {
+					"blobstore": {
+						"name": "storeFiles",
+						"strict_content_type_validation": "true"
+					},
+					"write_policy": "allow"
+				}
+			}
+		}
+	},
+	"blobstores": {
+		"file": [
+			"storeFiles"
+		]
+	}
+}
