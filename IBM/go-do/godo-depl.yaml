@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: $NAME
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: $NAME
+    spec:
+      containers:
+        - name: go-do-container
+          image: $IMAGE
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: $PORT
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $NAME
+  labels:
+    app: $NAME
+spec:
+  type: NodePort
+  ports:
+    - port: $PORT
+  selector:
+    app: $NAME
